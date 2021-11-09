@@ -13,9 +13,11 @@ dep:
 	$(CC) $(FLAGS) -c $(FILE).cpp
 
 create:
-	@rsync -a --exclude=*.pdf . a/
+	@rsync -a --exclude=*.pdf . a/   
 	@tar -cf $(TARFILE) a/
 	@rm -rf a/
 
 clean:
 	rm -f *.o $(TARGET) $(TARFILE)
+	
+fuck uuuuuuuuuuuuuuuuu
