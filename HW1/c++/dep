@@ -1,0 +1,2 @@
+main.o: main.cpp stack.h
+main2.o: main2.cpp stack.h
