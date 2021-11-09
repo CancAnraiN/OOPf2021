@@ -1,9 +1,5 @@
 #include "tar.h"
 
-void Usage()
-{
-	cout << "Usage: ./mytar " << "[tar_file]" << endl;
-}
 
 unsigned int Oct2uint(string oct)
 {
@@ -33,7 +29,7 @@ TarFile::TarFile(const char* file)
 	filename = file;
 }
 
-int TarFile::tarRead()
+int TarFile::tarRead()  //讀檔
 {
     int count = 0;
     char check[32];
@@ -90,7 +86,7 @@ int TarFile::tarRead()
     return count;
 }
 
-int TarFile::tarLs()
+int TarFile::tarLs() //把所有檔案用 `LsEntry()` 處理並列印
 {
 	int size = tarVec.size();
 	for(int i = 0; i < size; i++)
@@ -104,6 +100,7 @@ int TarFile::tarLs()
 
 int TarFile::LsEntry(Tar aTar)
 {
+	//處理檔案類型權限 & 擁有者 & 所屬群組
 	const mode_t mode = Oct2uint(aTar.filemode);
     const char mode_str[26] = { "-hlcbdp-" [aTar.type ? aTar.type-'0' : 0],
                                 mode & S_IRUSR ? 'r' : '-',
@@ -117,7 +114,7 @@ int TarFile::LsEntry(Tar aTar)
                                 mode & S_IXOTH ? 'x' : '-', 0};
 	cout << mode_str << ' ' << aTar.username << '/' << aTar.groupname << ' ';
 	
-	switch(aTar.type)
+	switch(aTar.type)  //印檔案大小
 	{
 		case REGULAR: case NORMAL: case CONTIGUOUS:
 			cout << setw(9) << setfill(' ') << Oct2uint(aTar.filesize) << ' ';
@@ -129,7 +126,8 @@ int TarFile::LsEntry(Tar aTar)
 			cout << setw(9) << setfill(' ') << Oct2uint(aTar.devmajor) << ',' << Oct2uint(aTar.devminor) << ' ';
 			break;
 	}
-
+	
+	//處理時間
 	time_t mtime = Oct2uint(aTar.mtime);
 	struct tm* time = localtime(&mtime);
 	cout << time -> tm_year + 1900 << '-' << setw(2) << setfill('0') 
@@ -137,10 +135,10 @@ int TarFile::LsEntry(Tar aTar)
 	     << time -> tm_mday << ' ' << setw(2) << setfill('0') 
 	     << time -> tm_hour << ':' << setw(2) << setfill('0') 
 	     << time -> tm_min << ' ';
-
+	
 	cout << aTar.filename;
 
-	switch(aTar.type)
+	switch(aTar.type)//處理有link的狀況
 	{
 		case HARDLINK:
 			cout << " link to " << aTar.lname;

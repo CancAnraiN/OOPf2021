@@ -23,7 +23,6 @@ using namespace std;
 
 #define ERROR(fmt, ...) (cerr << "Error: " << fmt << endl, ##__VA_ARGS__); return -1;
 
-void Usage();
 unsigned int Oct2uint(string oct);
 int Iszero(string str);
 
