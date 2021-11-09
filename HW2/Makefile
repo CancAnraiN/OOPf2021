@@ -20,4 +20,3 @@ create:
 clean:
 	rm -f *.o $(TARGET) $(TARFILE)
 	
-fuck uuuuuuuuuuuuuuuuu
